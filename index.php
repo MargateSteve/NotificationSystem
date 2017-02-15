@@ -75,7 +75,7 @@ echo isset($_SESSION['user']) ? $_SESSION['user'] : '';
                     if(response.success=='true') {
 
                         $('body').append('<div class="alert alert-warning notification-'+response.notification+'">'+response.sent_time+'<br>'+response.sender+'<br>'+response.message+'<br><button class="btn btn-primary dismiss" data-notification="'+response.notification+'">Dismiss</button></div>');
-
+                        clearInterval(pollInterval);
                     } else {
 
                     
@@ -87,16 +87,12 @@ echo isset($_SESSION['user']) ? $_SESSION['user'] : '';
 
         };
 
-        setInterval(function(){
+        pollInterval = setInterval(function(){
             poll();
-        }, 2000);
+        }, 2000);   
 
-    })();
 
-    
-        
-
-        $(document).on('click', '.dismiss', function () {
+             $(document).on('click', '.dismiss', function () {
         console.log('Button Clicked');
 
         var notification = $(this).attr("data-notification");
@@ -116,7 +112,9 @@ echo isset($_SESSION['user']) ? $_SESSION['user'] : '';
                         console.log('response.success:'+response.success);
 
                         $('div.alert.notification-'+notification).remove();
-
+                        pollInterval = setInterval(function(){
+            poll();
+        }, 2000);
                     } else {
 
                     
@@ -127,6 +125,13 @@ echo isset($_SESSION['user']) ? $_SESSION['user'] : '';
             });
         return false;
     });
+
+    })();
+
+    
+        
+
+
 });
 </script>
 </body>
